@@ -29,9 +29,8 @@ public class GildedRose
 
 	public static void updateQualityAndSellInForAllItems()
 	{
-		for (int currentItem = 0; currentItem < items.size(); currentItem++)
+		for (Item item : items) 
 		{
-			Item item = items.get(currentItem);
 			updateQualityAndSellInForItem(item);
 		}
 	}
@@ -39,16 +38,18 @@ public class GildedRose
 	
 	private static void updateQualityAndSellInForItem(Item item) 
 	{
-		if (!isInalterable(item))
+		if (isLegendary(item))
 		{
-			updateQuality(item);
-			updateSellIn(item);
-
-			if (item.getSellIn() < 0)
-			{
-				updateQualityOfExpiredItem(item);
-			}
+			return ;
 		}		
+		
+		updateQuality(item);
+		updateSellIn(item);
+
+		if (item.getSellIn() < 0)
+		{
+			updateQualityOfExpiredItem(item);
+		}
 	}
 
 	
@@ -62,7 +63,7 @@ public class GildedRose
 		{
 			increaseQuality(item);
 
-			if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName()))
+			if (isBackstagePass(item))
 			{
 				if (item.getSellIn() < 11)
 				{
@@ -78,25 +79,17 @@ public class GildedRose
 	}
 
 	
-	private static boolean isNormal(Item item) 
-	{
-		return (!"Aged Brie".equals(item.getName()))
-				&& !"Backstage passes to a TAFKAL80ETC concert".equals(item.getName());
-	}
-
-
-
 	private static void updateQualityOfExpiredItem(Item item) 
 	{
 		if (!"Aged Brie".equals(item.getName()))
 		{
-			if (!"Backstage passes to a TAFKAL80ETC concert".equals(item.getName()))
+			if (!isBackstagePass(item))
 			{
 				decreaseQuality(item);
 			}
 			else
 			{
-				item.setQuality(item.getQuality() - item.getQuality());
+				item.setQuality(0);
 			}
 		}
 		else
@@ -130,8 +123,21 @@ public class GildedRose
 	}
 	
 	
-	private static boolean isInalterable(Item item) 
+	private static boolean isLegendary(Item item) 
 	{
 		return "Sulfuras, Hand of Ragnaros".equals(item.getName());
+	}
+	
+	
+	private static boolean isBackstagePass(Item item) 
+	{
+		return "Backstage passes to a TAFKAL80ETC concert".equals(item.getName());
+	}
+
+	
+	private static boolean isNormal(Item item) 
+	{
+		return (!"Aged Brie".equals(item.getName()))
+				&& !isBackstagePass(item);
 	}
 }
