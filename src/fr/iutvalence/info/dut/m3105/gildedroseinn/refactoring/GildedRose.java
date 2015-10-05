@@ -54,43 +54,37 @@ public class GildedRose
 	
 	private static void updateQuality(Item item) 
 	{
-		if ((!"Aged Brie".equals(item.getName()))
-				&& !"Backstage passes to a TAFKAL80ETC concert".equals(item.getName()))
+		if (isNormal(item))
 		{
-			if (item.getQuality() > 0)
-			{
-					item.setQuality(item.getQuality() - 1);
-			}
+			decreaseQuality(item);
 		}
 		else
 		{
-			if (item.getQuality() < 50)
+			increaseQuality(item);
+
+			if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName()))
 			{
-				item.setQuality(item.getQuality() + 1);
-
-				if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName()))
+				if (item.getSellIn() < 11)
 				{
-					if (item.getSellIn() < 11)
-					{
-						if (item.getQuality() < 50)
-						{
-							item.setQuality(item.getQuality() + 1);
-						}
-					}
-
-					if (item.getSellIn() < 6)
-					{
-						if (item.getQuality() < 50)
-						{
-							item.setQuality(item.getQuality() + 1);
-						}
-					}
+					increaseQuality(item);
+				}
+	
+				if (item.getSellIn() < 6)
+				{
+					increaseQuality(item);
 				}
 			}
 		}
 	}
 
 	
+	private static boolean isNormal(Item item) 
+	{
+		return (!"Aged Brie".equals(item.getName()))
+				&& !"Backstage passes to a TAFKAL80ETC concert".equals(item.getName());
+	}
+
+
 
 	private static void updateQualityOfExpiredItem(Item item) 
 	{
@@ -98,10 +92,7 @@ public class GildedRose
 		{
 			if (!"Backstage passes to a TAFKAL80ETC concert".equals(item.getName()))
 			{
-				if (item.getQuality() > 0)
-				{				
-						item.setQuality(item.getQuality() - 1);
-				}
+				decreaseQuality(item);
 			}
 			else
 			{
@@ -110,10 +101,7 @@ public class GildedRose
 		}
 		else
 		{
-			if (item.getQuality() < 50)
-			{
-				item.setQuality(item.getQuality() + 1);
-			}
+			increaseQuality(item);
 		}
 	}
 
@@ -123,6 +111,24 @@ public class GildedRose
 			item.setSellIn(item.getSellIn() - 1);
 	}
 
+	
+	private static void increaseQuality(Item item) 
+	{
+		if (item.getQuality() < 50)
+		{
+			item.setQuality(item.getQuality() + 1);
+		}
+	}
+	
+
+	private static void decreaseQuality(Item item) 
+	{
+		if (item.getQuality() > 0)
+		{
+				item.setQuality(item.getQuality() - 1);
+		}
+	}
+	
 	
 	private static boolean isInalterable(Item item) 
 	{
